@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gabinkeun - Modern Gabin Snack</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFFFF; color: #000000; }
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-white text-black">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 glass border-b border-black/10 transition-all">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-black text-sm tracking-wider">
+          G
+        </div>
+        <span class="font-bold text-xl tracking-tight text-black">gabin<span class="text-zinc-600">keun</span></span>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button id="adminBtn" onclick="toggleAdminPrompt()" class="px-3 py-1.5 text-xs font-semibold rounded-full border border-black text-black hover:bg-black hover:text-white transition flex items-center gap-1.5">
+          <i class="fa-solid fa-lock text-[10px]" id="adminIcon"></i>
+          <span id="adminBtnText">Admin Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full">
+    
+    <!-- Hero Banner -->
+    <section class="mb-10 text-center sm:text-left bg-zinc-100 rounded-3xl p-6 sm:p-8 border border-black/10">
+      <div class="inline-block px-3 py-1 rounded-full bg-black text-white text-xs font-bold mb-3">
+        ✨ renyah di luar, lumer di dalam
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight mb-2">
+        Nikmati Kelezatan Gabin Keun
+      </h1>
+      <p class="text-zinc-600 text-sm sm:text-base max-w-xl">
+        gabinkeunn
+      </p>
+    </section>
+
+    <!-- Product Selection Section -->
+    <section class="mb-10">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-black">Pilihan Rasa</h2>
+          <p class="text-xs text-zinc-600">Pilih varian favorit dan tentukan jumlah pesanan</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="productsGrid">
+        <!-- Products generated dynamically -->
+      </div>
+    </section>
+
+    <!-- Order Form & Summary Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Order Details Form -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-black/20 shadow-sm">
+        <h3 class="text-lg font-bold text-black mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-list text-black"></i> Detail Pemesan
+        </h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-black uppercase tracking-wider mb-1">Nama Pemesan</label>
+            <input type="text" id="custName" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2.5 rounded-xl border border-black/30 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-black uppercase tracking-wider mb-1">Nama Kelas / Lokasi</label>
+            <input type="text" id="className" placeholder="Contoh: Class X IPA 2 / Ruang 102" class="w-full px-4 py-2.5 rounded-xl border border-black/30 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-black uppercase tracking-wider mb-1">Deskripsi / Catatan Tambahan</label>
+            <textarea id="orderNotes" rows="3" placeholder="Contoh: Minta dipisah plastik nya, atau kirim pas jam istirahat." class="w-full px-4 py-2.5 rounded-xl border border-black/30 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition resize-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Cart & Checkout Button -->
+      <div class="bg-black text-white rounded-2xl p-6 shadow-xl flex flex-col justify-between border border-black">
+        <div>
+          <h3 class="text-lg font-bold mb-4 flex items-center justify-between border-b border-zinc-800 pb-3">
+            <span>Ringkasan Pesanan</span>
+            <i class="fa-solid fa-bag-shopping text-white"></i>
+          </h3>
+
+          <div id="cartList" class="space-y-3 mb-6 min-h-[120px] divide-y divide-zinc-800 text-sm">
+            <!-- Cart items inserted here -->
+          </div>
+        </div>
+
+        <div>
+          <div class="border-t border-zinc-800 pt-4 mb-5">
+            <div class="flex justify-between items-center text-xs text-zinc-400 mb-1">
+              <span>Total Item</span>
+              <span id="totalItemsCount" class="font-medium text-white">0 pcs</span>
+            </div>
+            <div class="flex justify-between items-center text-base font-bold text-white">
+              <span>Total Bayar</span>
+              <span id="totalPrice" class="text-white text-xl font-extrabold">Rp 0</span>
+            </div>
+          </div>
+
+          <button onclick="sendWhatsAppOrder()" class="w-full py-3.5 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition flex items-center justify-center gap-2 border border-black">
+            <i class="fa-brands fa-whatsapp text-lg"></i> Pesan via WhatsApp
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-black/10 bg-white py-6">
+    <div class="max-w-4xl mx-auto px-4 text-center text-xs text-zinc-500">
+      &copy; 2026 gabinkeun. Hak Cipta Dilindungi.
+    </div>
+  </footer>
+
+  <script>
+    // Product Data
+    const products = [
+      { id: 'vario', name: 'vario ( vanilla oreo )', price: 8000, qty: 0, stock: 50 },
+      { id: 'rematch', name: 'rematch ( regal matcha )', price: 8000, qty: 0, stock: 50 },
+      { id: 'strawberry', name: 'strawberry', price: 8000, qty: 0, stock: 50 }
+    ];
+
+    let isAdmin = false;
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+
+      products.forEach((p, idx) => {
+        grid.innerHTML += `
+          <div class="bg-white rounded-2xl p-5 border border-black/20 hover:border-black transition shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-full h-32 bg-zinc-100 rounded-xl mb-4 flex items-center justify-center text-black text-3xl font-extrabold uppercase tracking-widest border border-black/10">
+                ${p.id.substring(0, 3)}
+              </div>
+              
+              <h3 class="font-bold text-black text-base mb-1 capitalize">${p.name}</h3>
+              
+              <div class="flex items-center justify-between mb-4">
+                ${isAdmin ? 
+                  `<div class="flex items-center gap-1">
+                    <span class="text-xs text-zinc-600 font-semibold">Rp</span>
+                    <input type="number" value="${p.price}" onchange="updatePrice(${idx}, this.value)" class="w-20 px-2 py-1 text-xs border border-black rounded text-black font-bold focus:outline-none">
+                  </div>` :
+                  `<span class="text-black font-bold text-sm">Rp ${p.price.toLocaleString('id-ID')}</span>`
+                }
+                
+                ${isAdmin ?
+                  `<div class="flex items-center gap-1">
+                    <span class="text-[11px] text-zinc-600">Stok:</span>
+                    <input type="number" value="${p.stock}" onchange="updateStock(${idx}, this.value)" class="w-16 px-1.5 py-0.5 text-xs border border-black rounded text-black font-medium focus:outline-none">
+                  </div>` :
+                  `<span class="text-[11px] px-2 py-0.5 rounded-full bg-zinc-100 text-black border border-black/10 font-medium">Stok: ${p.stock}</span>`
+                }
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-zinc-200 flex items-center justify-between">
+              <span class="text-xs text-zinc-600 font-medium">Jumlah:</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changeQty(${idx}, -1)" class="w-8 h-8 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-black font-bold flex items-center justify-center text-sm transition border border-black/10">-</button>
+                <span class="w-6 text-center font-bold text-sm text-black">${p.qty}</span>
+                <button onclick="changeQty(${idx}, 1)" class="w-8 h-8 rounded-lg bg-black hover:bg-zinc-800 text-white font-bold flex items-center justify-center text-sm transition">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      renderCart();
+    }
+
+    function changeQty(index, change) {
+      if (change > 0 && products[index].qty >= products[index].stock) {
+        alert('Jumlah melebihi stok yang tersedia!');
+        return;
+      }
+      if (products[index].qty + change >= 0) {
+        products[index].qty += change;
+        renderProducts();
+      }
+    }
+
+    function updatePrice(index, newPrice) {
+      const parsed = parseInt(newPrice);
+      if (!isNaN(parsed) && parsed >= 0) {
+        products[index].price = parsed;
+        renderCart();
+      }
+    }
+
+    function updateStock(index, newStock) {
+      const parsed = parseInt(newStock);
+      if (!isNaN(parsed) && parsed >= 0) {
+        products[index].stock = parsed;
+        if (products[index].qty > products[index].stock) {
+          products[index].qty = products[index].stock;
+        }
+        renderCart();
+      }
+    }
+
+    function toggleAdminPrompt() {
+      if (isAdmin) {
+        isAdmin = false;
+        document.getElementById('adminBtnText').innerText = 'Admin Mode';
+        document.getElementById('adminIcon').className = 'fa-solid fa-lock text-[10px]';
+        document.getElementById('adminBtn').classList.remove('bg-black', 'text-white');
+        document.getElementById('adminBtn').classList.add('text-black');
+        renderProducts();
+      } else {
+        const pin = prompt('Masukkan PIN Admin:');
+        if (pin === '100826') {
+          isAdmin = true;
+          document.getElementById('adminBtnText').innerText = 'Keluar Admin';
+          document.getElementById('adminIcon').className = 'fa-solid fa-lock-open text-[10px]';
+          document.getElementById('adminBtn').classList.add('bg-black', 'text-white');
+          renderProducts();
+        } else if (pin !== null) {
+          alert('PIN Salah!');
+        }
+      }
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById('cartList');
+      const selected = products.filter(p => p.qty > 0);
+      
+      let totalPcs = 0;
+      let totalPrice = 0;
+
+      if (selected.length === 0) {
+        cartList.innerHTML = '<p class="text-zinc-400 text-xs italic py-4 text-center">Belum ada varian gabin yang dipilih.</p>';
+      } else {
+        cartList.innerHTML = '';
+        selected.forEach(p => {
+          const itemTotal = p.qty * p.price;
+          totalPcs += p.qty;
+          totalPrice += itemTotal;
+
+          cartList.innerHTML += `
+            <div class="pt-2 flex justify-between items-center text-xs">
+              <div>
+                <p class="font-medium text-white capitalize">${p.name}</p>
+                <p class="text-zinc-400 text-[10px]">${p.qty} x Rp ${p.price.toLocaleString('id-ID')}</p>
+              </div>
+              <span class="font-semibold text-white">Rp ${itemTotal.toLocaleString('id-ID')}</span>
+            </div>
+          `;
+        });
+      }
+
+      document.getElementById('totalItemsCount').innerText = `${totalPcs} pcs`;
+      document.getElementById('totalPrice').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+    }
+
+    function sendWhatsAppOrder() {
+      const name = document.getElementById('custName').value.trim();
+      const className = document.getElementById('className').value.trim();
+      const notes = document.getElementById('orderNotes').value.trim();
+      const selected = products.filter(p => p.qty > 0);
+
+      if (selected.length === 0) {
+        alert('Silakan pilih minimal 1 produk gabin!');
+        return;
+      }
+      if (!name) {
+        alert('Silakan isi Nama Pemesan!');
+        return;
+      }
+
+      let msg = `Halo *gabinkeun*, saya mau pesan:
+
+`;
+      msg += ` *Nama:* ${name}
+`;
+      msg += ` *Kelas/Lokasi:* ${className || '-'}
+
+`;
+      msg += ` *Pesanan:* 
+`;
+
+      let total = 0;
+      selected.forEach(p => {
+        const itemTotal = p.qty * p.price;
+        total += itemTotal;
+        msg += `- ${p.name} (${p.qty}x) = Rp ${itemTotal.toLocaleString('id-ID')}
+`;
+      });
+
+      msg += `
+ *Total Bayar:* Rp ${total.toLocaleString('id-ID')}
+`;
+      if (notes) {
+        msg += ` *Catatan:* ${notes}
+`;
+      }
+
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://wa.me/6287872791423?text=${encoded}`, '_blank');
+    }
+
+    // Initial load
+    renderProducts();
+  </script>
+</body>
+</html>
